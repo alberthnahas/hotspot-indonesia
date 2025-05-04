@@ -1,5 +1,5 @@
 # hotspot-indonesia
-Map the hotspot from satellite observation over Indonesia.
+Map hotspots from satellite observation over Indonesia.
 
 The latest hotspot data is downloaded from BMKG using the following command:
 ```text
