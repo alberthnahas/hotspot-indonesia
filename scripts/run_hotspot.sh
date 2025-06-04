@@ -8,6 +8,7 @@ else
     echo "Virtual environment not found at hs/bin/activate"
 fi
 
-python3 hotspot_map.py
+SCRIPT_DIR="$(dirname "$0")"
+python3 "$SCRIPT_DIR/hotspot_map.py"
 
 deactivate

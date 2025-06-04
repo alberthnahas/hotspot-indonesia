@@ -7,13 +7,16 @@ from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 import matplotlib.image as mpimg
 import datetime
 import os
+from pathlib import Path
 
-# === Set working directory ===
-os.chdir(os.path.expanduser("./"))
+# === Resolve project directories ===
+# Determine the project root based on this file's location so that the
+# script works regardless of the current working directory.
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # === Load and clean data from TXT ===
-txt_file = "Hotspot_Indonesia.txt"
-csv_file = "Hotspot_Indonesia.csv"
+txt_file = BASE_DIR / "data" / "Hotspot_Indonesia.txt"
+csv_file = BASE_DIR / "data" / "Hotspot_Indonesia.csv"
 
 with open(txt_file, 'r') as file:
     lines = file.readlines()
@@ -56,8 +59,8 @@ region_counts = {
 }
 
 # === Load shapefiles ===
-shp_indonesia = gpd.read_file("shp/Indonesia_38_Provinsi.shp")
-shp_others = gpd.read_file("shp/world_without_idn.shp")
+shp_indonesia = gpd.read_file(BASE_DIR / "shp" / "Indonesia_38_Provinsi.shp")
+shp_others = gpd.read_file(BASE_DIR / "shp" / "world_without_idn.shp")
 
 # === Create map ===
 fig, ax = plt.subplots(figsize=(10, 7.5))
@@ -124,7 +127,8 @@ ax.text(98.8, -16.2, f'Tanggal: {today.strftime("%d-%m-%Y")}', family='monospace
 ax.text(98.8, -17.2, 'Satelit: Terra, Aqua, Suomi NPP, NOAA-20, dan NOAA-21', family='monospace')
 
 try:
-    logo = mpimg.imread("logo_bmkg.png")
+    logo_path = BASE_DIR / "images" / "logo_bmkg.png"
+    logo = mpimg.imread(logo_path)
     imagebox = OffsetImage(logo, zoom=0.15)
     ab = AnnotationBbox(imagebox, (97.3, -16.0), frameon=False)
     ax.add_artist(ab)
@@ -132,7 +136,8 @@ except FileNotFoundError:
     print("BMKG logo not found")
 
 plt.tight_layout()
-plt.savefig("update_hotspot.png", dpi=150)
+output_path = BASE_DIR / "images" / "update_hotspot.png"
+plt.savefig(output_path, dpi=150)
 
 print("Work has been completed.")
 
